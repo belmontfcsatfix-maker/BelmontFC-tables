@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDSL League Tables</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #00a651;
+    --green-dark: #007a3d;
+    --green-glow: rgba(0, 166, 81, 0.18);
+    --white: #f5f7f2;
+    --off-white: #e8ece3;
+    --bg: #0d1410;
+    --bg2: #111a14;
+    --bg3: #162019;
+    --card: #182117;
+    --card2: #1e2b1d;
+    --border: #253324;
+    --muted: #5a7257;
+    --gold: #f5c842;
+    --silver: #9ab09a;
+    --bronze: #c47b3a;
+    --red: #e84040;
+    --blue: #3a8fd4;
+    --text: #d4e0cf;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Barlow', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, var(--green-dark) 0%, #004d26 100%);
+    border-bottom: 2px solid var(--green);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .logo-icon {
+    width: 36px; height: 36px;
+    background: var(--white);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  .logo-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .logo-sub {
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.65);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* ── Main Layout ── */
+  .container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  /* ── Control Panel ── */
+  .control-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .panel-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 1rem;
+  }
+
+  .division-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .division-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg3);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+  }
+
+  .division-chip:hover {
+    border-color: var(--green);
+    background: var(--card2);
+  }
+
+  .division-chip.selected {
+    border-color: var(--green);
+    background: var(--green-glow);
+    box-shadow: 0 0 0 1px var(--green);
+  }
+
+  .chip-check {
+    width: 18px; height: 18px;
+    border-radius: 4px;
+    border: 2px solid var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+    font-size: 11px;
+  }
+
+  .division-chip.selected .chip-check {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+
+  .chip-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--white);
+    line-height: 1.1;
+  }
+
+  .chip-sub {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .action-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 9px 18px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.18s;
+  }
+
+  .btn-primary {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) { background: var(--green-dark); }
+  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--green);
+    border: 1.5px solid var(--green);
+  }
+  .btn-ghost:hover:not(:disabled) { background: var(--green-glow); }
+  .btn-ghost:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .btn-export {
+    background: var(--gold);
+    color: #111;
+  }
+  .btn-export:hover:not(:disabled) { filter: brightness(0.92); }
+  .btn-export:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .select-all-link {
+    font-size: 0.82rem;
+    color: var(--muted);
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.15s;
+    margin-left: auto;
+  }
+  .select-all-link:hover { color: var(--green); }
+
+  /* ── Status ── */
+  #status-bar {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-left: 8px;
+  }
+
+  /* ── Tables Section ── */
+  #tables-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .table-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table-card-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--white);
+    letter-spacing: 0.03em;
+  }
+
+  .table-card-badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--green);
+    background: var(--green-glow);
+    border: 1px solid var(--green);
+    border-radius: 20px;
+    padding: 3px 10px;
+  }
+
+  .table-card-link {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .table-card-link:hover { color: var(--green); }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  table.league {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  table.league thead tr {
+    background: var(--bg3);
+    border-bottom: 2px solid var(--green);
+  }
+
+  table.league th {
+    padding: 9px 12px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  table.league th:nth-child(2) { text-align: left; }
+
+  table.league tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.12s;
+  }
+
+  table.league tbody tr:hover { background: var(--card2); }
+
+  table.league td {
+    padding: 9px 12px;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  table.league td:nth-child(2) { text-align: left; }
+
+  .pos-cell {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1rem;
+    width: 40px;
+  }
+
+  .pos-1 { color: var(--gold); }
+  .pos-2 { color: var(--silver); }
+  .pos-3 { color: var(--bronze); }
+
+  .team-name {
+    font-weight: 600;
+    color: var(--white);
+    font-size: 0.9rem;
+  }
+
+  .pts-cell {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--green);
+  }
+
+  .form-badges {
+    display: flex;
+    gap: 3px;
+    justify-content: center;
+  }
+
+  .form-w { background: var(--green); color: #fff; }
+  .form-d { background: #4a5a48; color: var(--white); }
+  .form-l { background: var(--red); color: #fff; }
+
+  .form-badge {
+    width: 20px; height: 20px;
+    border-radius: 4px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: 0;
+  }
+
+  /* Skeleton loader */
+  .skeleton-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+  }
+
+  .skeleton-header {
+    height: 56px;
+    background: var(--card2);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem;
+  }
+
+  .skel {
+    background: linear-gradient(90deg, var(--card2) 25%, var(--border) 50%, var(--card2) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+    border-radius: 5px;
+  }
+
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  .skel-title { width: 160px; height: 20px; }
+  .skel-badge { width: 60px; height: 20px; margin-left: auto; }
+
+  .skeleton-body {
+    padding: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .skel-row { height: 36px; width: 100%; }
+
+  /* Empty / Error */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--muted);
+  }
+
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
+  .empty-title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: var(--silver);
+    margin-bottom: 0.5rem;
+  }
+
+  .error-msg {
+    padding: 1rem 1.25rem;
+    color: #e87070;
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+    background: rgba(232,64,64,0.05);
+  }
+
+  /* Refresh indicator */
+  .spin { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Last updated */
+  .last-updated {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-left: auto;
+  }
+
+  .gf-ga { color: var(--muted); font-size: 0.82rem; }
+
+  /* Promotion / relegation bands */
+  .promo-line td:first-child {
+    border-left: 3px solid var(--green);
+  }
+  .mid-line td:first-child {
+    border-left: 3px solid transparent;
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⚽</div>
+    <div>
+      <div class="logo-text">DDSL</div>
+      <div class="logo-sub">League Tables Dashboard</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span id="last-fetch" class="last-updated"></span>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Control Panel -->
+  <div class="control-panel">
+    <div class="panel-title">⚡ Select Divisions</div>
+    <div class="division-grid" id="division-grid"></div>
+    <div class="action-row">
+      <button class="btn btn-primary" id="btn-load" onclick="loadSelected()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.15"/></svg>
+        Load Tables
+      </button>
+      <button class="btn btn-export" id="btn-export" onclick="exportCSV()" disabled>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export CSV
+      </button>
+      <span id="status-bar"></span>
+      <span class="select-all-link" onclick="toggleAll()">Select All</span>
+    </div>
+  </div>
+
+  <!-- Tables -->
+  <div id="tables-section">
+    <div class="empty-state">
+      <div class="empty-icon">🏆</div>
+      <div class="empty-title">Select divisions above and click Load Tables</div>
+      <div>Live data pulled directly from DDSL.ie</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Config ───────────────────────────────────────────────────────────────────
+const DIVISIONS = [
+  { id: 'u13-8', label: 'U13.8 Boys Sat', url: 'https://ddsl.ie/league/208857/', leagueId: '208857' },
+  { id: 'u13-7', label: 'U13.7 Boys Sat', url: 'https://ddsl.ie/league/208856/', leagueId: '208856' },
+  { id: 'u13-2', label: 'U13.2 Boys Sat', url: 'https://ddsl.ie/league/208793/', leagueId: '208793' },
+  { id: 'u12-8', label: 'U12.8 Boys Sat', url: 'https://ddsl.ie/league/208714/', leagueId: '208714' },
+  { id: 'u12-6', label: 'U12.6 Boys Sat', url: 'https://ddsl.ie/league/208712/', leagueId: '208712' },
+  { id: 'u12-3', label: 'U12.3 Boys Sat', url: 'https://ddsl.ie/league/208698/', leagueId: '208698' },
+];
+
+const selected = new Set();
+let loadedData = {};   // id -> array of row objects
+
+// ── Build division chips ──────────────────────────────────────────────────────
+(function buildChips() {
+  const grid = document.getElementById('division-grid');
+  DIVISIONS.forEach(d => {
+    const chip = document.createElement('div');
+    chip.className = 'division-chip';
+    chip.id = 'chip-' + d.id;
+    chip.innerHTML = `
+      <div class="chip-check" id="check-${d.id}">✓</div>
+      <div>
+        <div class="chip-label">${d.label}</div>
+        <div class="chip-sub">ddsl.ie/league/${d.leagueId}/</div>
+      </div>`;
+    chip.addEventListener('click', () => toggleChip(d.id));
+    grid.appendChild(chip);
+  });
+})();
+
+function toggleChip(id) {
+  if (selected.has(id)) selected.delete(id);
+  else selected.add(id);
+  document.getElementById('chip-' + id).classList.toggle('selected', selected.has(id));
+  document.getElementById('btn-load').disabled = selected.size === 0;
+}
+
+function toggleAll() {
+  const allSelected = DIVISIONS.every(d => selected.has(d.id));
+  DIVISIONS.forEach(d => {
+    if (allSelected) selected.delete(d.id);
+    else selected.add(d.id);
+    document.getElementById('chip-' + d.id).classList.toggle('selected', selected.has(d.id));
+  });
+  document.getElementById('btn-load').disabled = selected.size === 0;
+}
+
+// ── Load & parse via Anthropic API ───────────────────────────────────────────
+async function loadSelected() {
+  if (selected.size === 0) return;
+
+  const section = document.getElementById('tables-section');
+  section.innerHTML = '';
+  loadedData = {};
+
+  const toLoad = DIVISIONS.filter(d => selected.has(d.id));
+
+  // Show skeletons
+  toLoad.forEach(d => {
+    section.innerHTML += `
+      <div class="skeleton-card" id="skel-${d.id}">
+        <div class="skeleton-header">
+          <div class="skel skel-title"></div>
+          <div class="skel skel-badge"></div>
+        </div>
+        <div class="skeleton-body">
+          ${Array(6).fill('<div class="skel skel-row"></div>').join('')}
+        </div>
+      </div>`;
+  });
+
+  setStatus('Fetching ' + toLoad.length + ' table(s)…', true);
+  document.getElementById('btn-export').disabled = true;
+
+  // Fetch all in parallel
+  await Promise.all(toLoad.map(d => fetchLeagueTable(d)));
+
+  setStatus('');
+  const now = new Date().toLocaleTimeString();
+  document.getElementById('last-fetch').textContent = 'Updated ' + now;
+  if (Object.keys(loadedData).length > 0) {
+    document.getElementById('btn-export').disabled = false;
+  }
+}
+
+async function fetchLeagueTable(div) {
+  const skelEl = document.getElementById('skel-' + div.id);
+  try {
+    const prompt = `Fetch the league table from this URL: ${div.url}
+
+Parse the standings table (NOT the matrix/fixture grid) and return ONLY a JSON array.
+Each element should be an object with these exact keys:
+  position (number), team (string), played (number), won (number), drawn (number), lost (number), gf (number), ga (number), gd (number), points (number), form (string - last 5 results as W/D/L letters joined by commas e.g. "W,W,D,L,W")
+
+Return ONLY the JSON array, no markdown, no explanation. Example:
+[{"position":1,"team":"FC Example","played":20,"won":15,"drawn":3,"lost":2,"gf":45,"ga":18,"gd":27,"points":48,"form":"W,W,D,W,W"}]
+
+Important: GF = goals for, GA = goals against, GD = goal difference.
+If GF/GA are not shown separately, use 0.
+If form is not shown, use empty string "".`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    const data = await response.json();
+
+    // Gather all text blocks
+    let rawText = data.content
+      .filter(b => b.type === 'text')
+      .map(b => b.text)
+      .join('\n');
+
+    // Strip markdown fences
+    rawText = rawText.replace(/```json|```/g, '').trim();
+
+    // Extract JSON array
+    const match = rawText.match(/\[[\s\S]*\]/);
+    if (!match) throw new Error('No JSON array found in response');
+
+    const rows = JSON.parse(match[0]);
+    loadedData[div.id] = { division: div, rows };
+    renderTable(div, rows, skelEl);
+
+  } catch (err) {
+    console.error(div.id, err);
+    if (skelEl) {
+      skelEl.innerHTML = `
+        <div class="table-card-header">
+          <span class="table-card-title">${div.label}</span>
+          <a href="${div.url}" target="_blank" class="table-card-link">↗ Open on DDSL</a>
+        </div>
+        <div class="error-msg">⚠ Could not load table: ${err.message}. <a href="${div.url}" target="_blank" style="color:var(--green)">Open on DDSL.ie</a></div>`;
+      skelEl.className = 'table-card';
+    }
+  }
+}
+
+function renderTable(div, rows, skelEl) {
+  const teamCount = rows.length;
+  const html = `
+    <div class="table-card-header">
+      <div>
+        <div class="table-card-title">${div.label}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span class="table-card-badge">${teamCount} teams</span>
+        <a href="${div.url}" target="_blank" class="table-card-link">↗ DDSL.ie</a>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table class="league">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Team</th>
+            <th>Pld</th>
+            <th>W</th>
+            <th>D</th>
+            <th>L</th>
+            <th>GF</th>
+            <th>GA</th>
+            <th>GD</th>
+            <th>Pts</th>
+            <th>Form</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map((r, i) => {
+            const posClass = r.position === 1 ? 'pos-1' : r.position === 2 ? 'pos-2' : r.position === 3 ? 'pos-3' : '';
+            const gd = typeof r.gd !== 'undefined' ? r.gd : (r.gf - r.ga);
+            const gdStr = gd > 0 ? '+' + gd : gd;
+            const formHtml = buildForm(r.form);
+            return `<tr>
+              <td class="pos-cell ${posClass}">${r.position}</td>
+              <td><span class="team-name">${escHtml(r.team)}</span></td>
+              <td>${r.played}</td>
+              <td>${r.won}</td>
+              <td>${r.drawn}</td>
+              <td>${r.lost}</td>
+              <td class="gf-ga">${r.gf || 0}</td>
+              <td class="gf-ga">${r.ga || 0}</td>
+              <td class="gf-ga">${gdStr}</td>
+              <td class="pts-cell">${r.points}</td>
+              <td><div class="form-badges">${formHtml}</div></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>`;
+
+  if (skelEl) {
+    skelEl.className = 'table-card';
+    skelEl.innerHTML = html;
+  }
+}
+
+function buildForm(formStr) {
+  if (!formStr) return '';
+  const parts = formStr.split(/[,\s]+/).filter(Boolean).slice(-5);
+  return parts.map(r => {
+    const up = r.toUpperCase();
+    const cls = up === 'W' ? 'form-w' : up === 'L' ? 'form-l' : 'form-d';
+    return `<span class="form-badge ${cls}">${up}</span>`;
+  }).join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function setStatus(msg, spin) {
+  const el = document.getElementById('status-bar');
+  if (!msg) { el.textContent = ''; return; }
+  el.innerHTML = spin
+    ? `<span class="spin" style="display:inline-block;">⟳</span> ${msg}`
+    : msg;
+}
+
+// ── CSV Export ────────────────────────────────────────────────────────────────
+function exportCSV() {
+  if (Object.keys(loadedData).length === 0) return;
+
+  let csv = '';
+  const entries = Object.values(loadedData);
+
+  entries.forEach(({ division, rows }) => {
+    // Division header row
+    csv += `"${division.label}"\n`;
+    csv += 'Position,Team,Played,Won,Drawn,Lost,GF,GA,GD,Points,Form\n';
+    rows.forEach(r => {
+      const gd = typeof r.gd !== 'undefined' ? r.gd : (r.gf - r.ga);
+      const formClean = (r.form || '').replace(/,/g, ' ');
+      csv += [
+        r.position,
+        `"${(r.team || '').replace(/"/g, '""')}"`,
+        r.played, r.won, r.drawn, r.lost,
+        r.gf || 0, r.ga || 0, gd,
+        r.points,
+        `"${formClean}"`
+      ].join(',') + '\n';
+    });
+    csv += '\n';
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const date = new Date().toISOString().slice(0, 10);
+  a.download = `DDSL_Tables_${date}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
