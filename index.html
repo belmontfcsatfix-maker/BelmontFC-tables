@@ -4,782 +4,661 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DDSL League Tables</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap');
+
   :root {
-    --green: #00a651;
-    --green-dark: #007a3d;
-    --green-glow: rgba(0, 166, 81, 0.18);
-    --white: #f5f7f2;
-    --off-white: #e8ece3;
-    --bg: #0d1410;
-    --bg2: #111a14;
-    --bg3: #162019;
-    --card: #182117;
-    --card2: #1e2b1d;
-    --border: #253324;
-    --muted: #5a7257;
-    --gold: #f5c842;
-    --silver: #9ab09a;
-    --bronze: #c47b3a;
-    --red: #e84040;
-    --blue: #3a8fd4;
-    --text: #d4e0cf;
+    --green: #1a6b3c;
+    --green-light: #22883f;
+    --green-dark: #0f3f22;
+    --grass: #2d9e54;
+    --gold: #f5c518;
+    --gold-light: #ffe27a;
+    --white: #fff;
+    --off-white: #f4f6f2;
+    --gray: #8a9a8e;
+    --dark: #111a14;
+    --shadow: 0 2px 12px rgba(0,0,0,0.15);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--bg);
-    color: var(--text);
     font-family: 'Barlow', sans-serif;
+    background: var(--green-dark);
+    color: var(--dark);
     min-height: 100vh;
   }
 
-  /* ── Header ── */
+  /* HEADER */
   header {
-    background: linear-gradient(135deg, var(--green-dark) 0%, #004d26 100%);
-    border-bottom: 2px solid var(--green);
-    padding: 0 2rem;
+    background: var(--green-dark);
+    padding: 20px 32px 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    height: 64px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    gap: 16px;
+    border-bottom: 3px solid var(--gold);
   }
-
-  .logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .logo-icon {
-    width: 36px; height: 36px;
-    background: var(--white);
+  .badge {
+    width: 52px;
+    height: 52px;
+    background: var(--gold);
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
-
-  .logo-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 1.5rem;
-    letter-spacing: 0.05em;
-    color: #fff;
-    line-height: 1;
+    font-size: 13px;
+    color: var(--green-dark);
+    line-height: 1.1;
+    text-align: center;
+    flex-shrink: 0;
   }
-
-  .logo-sub {
-    font-size: 0.7rem;
-    color: rgba(255,255,255,0.65);
-    letter-spacing: 0.15em;
+  header h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: var(--white);
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    font-weight: 500;
+  }
+  header h1 span {
+    color: var(--gold);
+  }
+  header p {
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 2px;
   }
 
-  .header-right {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  /* ── Main Layout ── */
+  /* MAIN LAYOUT */
   .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 2rem 1.5rem;
+    padding: 28px 24px;
   }
 
-  /* ── Control Panel ── */
-  .control-panel {
-    background: var(--card);
-    border: 1px solid var(--border);
+  /* SELECTOR PANEL */
+  .selector-panel {
+    background: var(--white);
     border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 2rem;
+    padding: 20px 24px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
   }
-
-  .panel-title {
+  .selector-panel h2 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.85rem;
-    letter-spacing: 0.15em;
+    font-size: 15px;
     text-transform: uppercase;
-    color: var(--green);
-    margin-bottom: 1rem;
+    letter-spacing: 0.08em;
+    color: var(--green-dark);
+    margin-bottom: 14px;
   }
-
   .division-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 16px;
   }
-
-  .division-chip {
+  .div-toggle {
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 10px 14px;
-    background: var(--bg3);
-    border: 1.5px solid var(--border);
+    border: 2px solid #d0dbd4;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.18s;
     user-select: none;
+    background: var(--off-white);
   }
-
-  .division-chip:hover {
+  .div-toggle:hover {
+    border-color: var(--green-light);
+    background: #e8f5ec;
+  }
+  .div-toggle.active {
     border-color: var(--green);
-    background: var(--card2);
+    background: #d4edda;
   }
-
-  .division-chip.selected {
-    border-color: var(--green);
-    background: var(--green-glow);
-    box-shadow: 0 0 0 1px var(--green);
-  }
-
-  .chip-check {
-    width: 18px; height: 18px;
-    border-radius: 4px;
-    border: 2px solid var(--muted);
-    display: flex; align-items: center; justify-content: center;
+  .div-toggle input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--green);
+    cursor: pointer;
     flex-shrink: 0;
-    transition: all 0.2s;
-    font-size: 11px;
   }
-
-  .division-chip.selected .chip-check {
-    background: var(--green);
-    border-color: var(--green);
-    color: #fff;
-  }
-
-  .chip-label {
+  .div-toggle .div-name {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 1rem;
-    color: var(--white);
-    line-height: 1.1;
+    font-size: 16px;
+    color: var(--green-dark);
+  }
+  .div-toggle .div-sub {
+    font-size: 11px;
+    color: var(--gray);
   }
 
-  .chip-sub {
-    font-size: 0.7rem;
-    color: var(--muted);
-    font-weight: 500;
-  }
-
-  .action-row {
+  .action-bar {
     display: flex;
-    gap: 0.75rem;
     align-items: center;
+    gap: 12px;
     flex-wrap: wrap;
   }
-
   .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 9px 18px;
+    padding: 9px 20px;
     border-radius: 7px;
     border: none;
-    cursor: pointer;
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.95rem;
-    letter-spacing: 0.05em;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.15s;
     text-transform: uppercase;
-    transition: all 0.18s;
   }
-
   .btn-primary {
     background: var(--green);
-    color: #fff;
+    color: var(--white);
   }
-  .btn-primary:hover:not(:disabled) { background: var(--green-dark); }
-  .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  .btn-ghost {
+  .btn-primary:hover { background: var(--green-light); }
+  .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
+  .btn-outline {
     background: transparent;
-    color: var(--green);
-    border: 1.5px solid var(--green);
+    color: var(--green-dark);
+    border: 2px solid var(--green-dark);
   }
-  .btn-ghost:hover:not(:disabled) { background: var(--green-glow); }
-  .btn-ghost:disabled { opacity: 0.35; cursor: not-allowed; }
-
-  .btn-export {
+  .btn-outline:hover { background: var(--off-white); }
+  .btn-gold {
     background: var(--gold);
-    color: #111;
+    color: var(--green-dark);
   }
-  .btn-export:hover:not(:disabled) { filter: brightness(0.92); }
-  .btn-export:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-gold:disabled { background: #ccc; cursor: not-allowed; color: #888; }
 
-  .select-all-link {
-    font-size: 0.82rem;
-    color: var(--muted);
-    cursor: pointer;
-    text-decoration: underline;
-    transition: color 0.15s;
-    margin-left: auto;
-  }
-  .select-all-link:hover { color: var(--green); }
-
-  /* ── Status ── */
-  #status-bar {
-    font-size: 0.82rem;
-    color: var(--muted);
-    margin-left: 8px;
+  .sel-count {
+    font-size: 13px;
+    color: var(--gray);
+    font-style: italic;
   }
 
-  /* ── Tables Section ── */
-  #tables-section {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
+  /* TABLES AREA */
+  .tables-area { display: flex; flex-direction: column; gap: 24px; }
 
-  .table-card {
-    background: var(--card);
-    border: 1px solid var(--border);
+  .league-card {
+    background: var(--white);
     border-radius: 12px;
     overflow: hidden;
-    animation: slideIn 0.3s ease;
+    box-shadow: var(--shadow);
   }
-
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(12px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .table-card-header {
+  .league-card-header {
+    background: var(--green-dark);
+    padding: 14px 20px;
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.25rem;
-    background: var(--card2);
-    border-bottom: 1px solid var(--border);
+    align-items: center;
   }
-
-  .table-card-title {
+  .league-card-header h3 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 1.25rem;
+    font-size: 22px;
     color: var(--white);
-    letter-spacing: 0.03em;
-  }
-
-  .table-card-badge {
-    font-size: 0.7rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--green);
-    background: var(--green-glow);
-    border: 1px solid var(--green);
-    border-radius: 20px;
-    padding: 3px 10px;
+    letter-spacing: 0.05em;
   }
-
-  .table-card-link {
-    font-size: 0.78rem;
-    color: var(--muted);
+  .league-card-header a {
+    font-size: 12px;
+    color: var(--gold);
     text-decoration: none;
-    transition: color 0.15s;
+    opacity: 0.85;
   }
-  .table-card-link:hover { color: var(--green); }
+  .league-card-header a:hover { opacity: 1; text-decoration: underline; }
 
-  .table-scroll {
+  .table-wrap {
     overflow-x: auto;
   }
-
-  table.league {
+  table.league-table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.88rem;
+    font-size: 14px;
   }
-
-  table.league thead tr {
-    background: var(--bg3);
-    border-bottom: 2px solid var(--green);
+  table.league-table thead tr {
+    background: var(--off-white);
+    border-bottom: 2px solid #d0dbd4;
   }
-
-  table.league th {
-    padding: 9px 12px;
+  table.league-table thead th {
+    padding: 10px 14px;
+    text-align: left;
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
+    font-size: 13px;
     text-transform: uppercase;
-    color: var(--muted);
-    text-align: center;
+    letter-spacing: 0.06em;
+    color: var(--green-dark);
     white-space: nowrap;
   }
-
-  table.league th:nth-child(2) { text-align: left; }
-
-  table.league tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.12s;
+  table.league-table thead th.num { text-align: center; }
+  table.league-table tbody tr {
+    border-bottom: 1px solid #e8f0ea;
+    transition: background 0.1s;
   }
+  table.league-table tbody tr:hover { background: #f0f8f2; }
+  table.league-table tbody tr.top-pos { background: #e8f8ee; }
+  table.league-table tbody tr.top-pos:hover { background: #d8f3e4; }
 
-  table.league tbody tr:hover { background: var(--card2); }
-
-  table.league td {
-    padding: 9px 12px;
-    text-align: center;
+  table.league-table td {
+    padding: 9px 14px;
+    color: var(--dark);
     white-space: nowrap;
   }
-
-  table.league td:nth-child(2) { text-align: left; }
-
-  .pos-cell {
+  table.league-table td.num { text-align: center; }
+  table.league-table td.pos {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 800;
-    font-size: 1rem;
+    font-size: 18px;
+    color: var(--green-dark);
     width: 40px;
   }
+  table.league-table td.pos.gold { color: #b5900a; }
+  table.league-table td.pos.silver { color: #7a7a7a; }
+  table.league-table td.pos.bronze { color: #8b5e3c; }
 
-  .pos-1 { color: var(--gold); }
-  .pos-2 { color: var(--silver); }
-  .pos-3 { color: var(--bronze); }
-
-  .team-name {
+  table.league-table td.team-name {
     font-weight: 600;
-    color: var(--white);
-    font-size: 0.9rem;
+    min-width: 200px;
   }
-
-  .pts-cell {
+  table.league-table td.pts {
     font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 800;
-    font-size: 1.05rem;
-    color: var(--green);
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--green-dark);
+    text-align: center;
   }
 
   .form-badges {
     display: flex;
     gap: 3px;
-    justify-content: center;
   }
-
-  .form-w { background: var(--green); color: #fff; }
-  .form-d { background: #4a5a48; color: var(--white); }
-  .form-l { background: var(--red); color: #fff; }
-
   .form-badge {
-    width: 20px; height: 20px;
-    border-radius: 4px;
-    font-size: 0.65rem;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    font-size: 10px;
     font-weight: 700;
-    display: flex; align-items: center; justify-content: center;
-    letter-spacing: 0;
-  }
-
-  /* Skeleton loader */
-  .skeleton-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    animation: slideIn 0.3s ease;
-  }
-
-  .skeleton-header {
-    height: 56px;
-    background: var(--card2);
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; padding: 0 1.25rem; gap: 1rem;
-  }
-
-  .skel {
-    background: linear-gradient(90deg, var(--card2) 25%, var(--border) 50%, var(--card2) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.4s infinite;
-    border-radius: 5px;
-  }
-
-  @keyframes shimmer {
-    0%   { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  .skel-title { width: 160px; height: 20px; }
-  .skel-badge { width: 60px; height: 20px; margin-left: auto; }
-
-  .skeleton-body {
-    padding: 0.75rem;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Barlow Condensed', sans-serif;
   }
+  .form-badge.W { background: #22883f; }
+  .form-badge.D { background: #e8a000; }
+  .form-badge.L { background: #c0392b; }
 
-  .skel-row { height: 36px; width: 100%; }
-
-  /* Empty / Error */
+  /* LOADING / EMPTY */
   .empty-state {
     text-align: center;
-    padding: 4rem 2rem;
-    color: var(--muted);
+    padding: 60px 20px;
+    color: #aaa;
+    background: var(--white);
+    border-radius: 12px;
   }
-
-  .empty-icon { font-size: 3rem; margin-bottom: 1rem; }
-  .empty-title {
+  .empty-state .icon { font-size: 48px; margin-bottom: 14px; }
+  .empty-state h3 {
     font-family: 'Barlow Condensed', sans-serif;
     font-weight: 700;
-    font-size: 1.3rem;
-    color: var(--silver);
-    margin-bottom: 0.5rem;
+    font-size: 22px;
+    color: var(--gray);
+    margin-bottom: 6px;
   }
+  .empty-state p { font-size: 14px; }
 
-  .error-msg {
-    padding: 1rem 1.25rem;
-    color: #e87070;
-    font-size: 0.85rem;
-    border-top: 1px solid var(--border);
-    background: rgba(232,64,64,0.05);
+  .loading-card {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--shadow);
   }
-
-  /* Refresh indicator */
-  .spin { animation: spin 1s linear infinite; }
+  .spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid #d0dbd4;
+    border-top-color: var(--green);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* Last updated */
   .last-updated {
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-left: auto;
+    font-size: 11px;
+    color: var(--gray);
+    margin-top: 6px;
+    padding: 0 20px 12px;
+    text-align: right;
   }
-
-  .gf-ga { color: var(--muted); font-size: 0.82rem; }
-
-  /* Promotion / relegation bands */
-  .promo-line td:first-child {
-    border-left: 3px solid var(--green);
-  }
-  .mid-line td:first-child {
-    border-left: 3px solid transparent;
-  }
-
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">
-    <div class="logo-icon">⚽</div>
-    <div>
-      <div class="logo-text">DDSL</div>
-      <div class="logo-sub">League Tables Dashboard</div>
-    </div>
-  </div>
-  <div class="header-right">
-    <span id="last-fetch" class="last-updated"></span>
+  <div class="badge">DDSL</div>
+  <div>
+    <h1>League <span>Tables</span></h1>
+    <p>Dublin & District Schoolboys League · 2025/26 Season</p>
   </div>
 </header>
 
 <div class="container">
 
-  <!-- Control Panel -->
-  <div class="control-panel">
-    <div class="panel-title">⚡ Select Divisions</div>
-    <div class="division-grid" id="division-grid"></div>
-    <div class="action-row">
-      <button class="btn btn-primary" id="btn-load" onclick="loadSelected()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.15"/></svg>
-        Load Tables
-      </button>
-      <button class="btn btn-export" id="btn-export" onclick="exportCSV()" disabled>
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        Export CSV
-      </button>
-      <span id="status-bar"></span>
-      <span class="select-all-link" onclick="toggleAll()">Select All</span>
+  <!-- SELECTOR PANEL -->
+  <div class="selector-panel">
+    <h2>Select Divisions to Display</h2>
+    <div class="division-grid" id="divisionGrid"></div>
+    <div class="action-bar">
+      <button class="btn btn-primary" id="loadBtn" onclick="loadSelected()">Load Tables</button>
+      <button class="btn btn-outline" onclick="selectAll()">Select All</button>
+      <button class="btn btn-outline" onclick="selectNone()">Clear</button>
+      <button class="btn btn-gold" id="exportBtn" onclick="exportCSV()" disabled>Export CSV</button>
+      <span class="sel-count" id="selCount">0 divisions selected</span>
     </div>
   </div>
 
-  <!-- Tables -->
-  <div id="tables-section">
+  <!-- TABLES AREA -->
+  <div class="tables-area" id="tablesArea">
     <div class="empty-state">
-      <div class="empty-icon">🏆</div>
-      <div class="empty-title">Select divisions above and click Load Tables</div>
-      <div>Live data pulled directly from DDSL.ie</div>
+      <div class="icon">⚽</div>
+      <h3>Select divisions above</h3>
+      <p>Choose one or more divisions and click Load Tables to view standings.</p>
     </div>
   </div>
 
 </div>
 
 <script>
-// ── Config ───────────────────────────────────────────────────────────────────
-const DIVISIONS = [
-  { id: 'u13-8', label: 'U13.8 Boys Sat', url: 'https://ddsl.ie/league/208857/', leagueId: '208857' },
-  { id: 'u13-7', label: 'U13.7 Boys Sat', url: 'https://ddsl.ie/league/208856/', leagueId: '208856' },
-  { id: 'u13-2', label: 'U13.2 Boys Sat', url: 'https://ddsl.ie/league/208793/', leagueId: '208793' },
-  { id: 'u12-8', label: 'U12.8 Boys Sat', url: 'https://ddsl.ie/league/208714/', leagueId: '208714' },
-  { id: 'u12-6', label: 'U12.6 Boys Sat', url: 'https://ddsl.ie/league/208712/', leagueId: '208712' },
-  { id: 'u12-3', label: 'U12.3 Boys Sat', url: 'https://ddsl.ie/league/208698/', leagueId: '208698' },
+// ── Static league data (parsed from ddsl.ie) ──────────────────────────────────
+
+const LEAGUES = [
+  {
+    id: 'u13_8',
+    name: 'U13.8 Boys Sat',
+    url: 'https://ddsl.ie/league/208857/',
+    updated: '23 May 2026',
+    teams: [
+      { pos:1,  team:'Tallaght Town AFC',        pld:23, w:20, d:3, l:0,  pts:63, form:'WWDWW' },
+      { pos:2,  team:'River Valley Rangers FC',  pld:22, w:16, d:3, l:3,  pts:51, form:'DLWWD' },
+      { pos:3,  team:'Granada FC',               pld:23, w:16, d:2, l:5,  pts:50, form:'WWWWW' },
+      { pos:4,  team:'Lucan United FC',          pld:23, w:14, d:0, l:9,  pts:42, form:'WLLWW' },
+      { pos:5,  team:'Terenure Rangers FC',      pld:21, w:13, d:1, l:7,  pts:40, form:'LDWWW' },
+      { pos:6,  team:'Collinstown FC',           pld:18, w:11, d:3, l:4,  pts:36, form:'WWLWW' },
+      { pos:7,  team:'Hartstown / Huntstown FC', pld:23, w:11, d:1, l:11, pts:34, form:'LWDWL' },
+      { pos:8,  team:'Shankill FC',              pld:24, w:10, d:4, l:10, pts:34, form:'DLLWL' },
+      { pos:9,  team:'Malahide United FC',       pld:22, w:7,  d:1, l:14, pts:22, form:'LLLWW' },
+      { pos:10, team:'Belmont FC',               pld:20, w:5,  d:2, l:13, pts:17, form:'LWDWL' },
+      { pos:11, team:'Dunboyne FC',              pld:21, w:3,  d:0, l:18, pts:9,  form:'LLLLL' },
+      { pos:12, team:'Dalkey United FC',         pld:20, w:2,  d:1, l:17, pts:7,  form:'DLLLL' },
+      { pos:13, team:'Esker Celtic FC',          pld:22, w:2,  d:1, l:19, pts:7,  form:'LDWLL' },
+    ]
+  },
+  {
+    id: 'u13_7',
+    name: 'U13.7 Boys Sat',
+    url: 'https://ddsl.ie/league/208856/',
+    updated: '23 May 2026',
+    teams: [
+      { pos:1,  team:'Castleknock Celtic FC',      pld:22, w:19, d:2, l:1,  pts:59, form:'WWWWW' },
+      { pos:2,  team:'St Mochtas FC',              pld:22, w:18, d:1, l:3,  pts:55, form:'LWWLW' },
+      { pos:3,  team:'Mulhuddart FC',              pld:20, w:13, d:2, l:5,  pts:41, form:'WWWWW' },
+      { pos:4,  team:'Finglas United FC',          pld:21, w:10, d:4, l:7,  pts:34, form:'WWWLW' },
+      { pos:5,  team:'Ballyoulster United FC',     pld:20, w:10, d:3, l:7,  pts:33, form:'LWLWW' },
+      { pos:6,  team:'Wayside Celtic FC',          pld:24, w:10, d:2, l:12, pts:32, form:'WDWDL' },
+      { pos:7,  team:'Belmont FC',                 pld:20, w:9,  d:5, l:6,  pts:32, form:'WWDDW' },
+      { pos:8,  team:'Rosemount Mulvey FC',        pld:23, w:9,  d:3, l:11, pts:30, form:'LWLLD' },
+      { pos:9,  team:'Marks Celtic FC',            pld:21, w:6,  d:5, l:10, pts:23, form:'LDLLD' },
+      { pos:10, team:'Mountview Boys & Girls FC',  pld:24, w:6,  d:4, l:14, pts:22, form:'LLLLW' },
+      { pos:11, team:'Beechwood FC',               pld:22, w:6,  d:4, l:12, pts:22, form:'LLLLL' },
+      { pos:12, team:'Verona FC',                  pld:24, w:3,  d:4, l:17, pts:13, form:'LLLLL' },
+      { pos:13, team:'Ballyfermot United FC',      pld:19, w:2,  d:1, l:16, pts:7,  form:'LLLLL' },
+    ]
+  },
+  {
+    id: 'u13_2',
+    name: 'U13.2 Boys Sat',
+    url: 'https://ddsl.ie/league/208793/',
+    updated: '23 May 2026',
+    teams: [
+      { pos:1, team:'Corduff FC',           pld:20, w:19, d:0, l:1,  pts:57, form:'WWWWL' },
+      { pos:2, team:'Ballyfermot United FC',pld:20, w:17, d:2, l:1,  pts:53, form:'WWWWW' },
+      { pos:3, team:'Peamount United FC',   pld:23, w:14, d:1, l:8,  pts:43, form:'LLWLW' },
+      { pos:4, team:'St Mochtas FC',        pld:24, w:13, d:1, l:10, pts:40, form:'WWLWW' },
+      { pos:5, team:'Rathcoole FC',         pld:23, w:9,  d:3, l:11, pts:30, form:'DLWDW' },
+      { pos:6, team:'Dalkey United FC',     pld:18, w:8,  d:2, l:8,  pts:26, form:'WLDLD' },
+      { pos:7, team:'Belmont FC',           pld:22, w:4,  d:3, l:15, pts:15, form:'LLLLL' },
+      { pos:8, team:'Castleknock Celtic FC',pld:21, w:2,  d:3, l:16, pts:9,  form:'LLLWD' },
+      { pos:9, team:'Knocklyon United FC',  pld:23, w:2,  d:3, l:18, pts:9,  form:'WLLDL' },
+    ]
+  },
+  {
+    id: 'u12_8',
+    name: 'U12.8 Boys Sat',
+    url: 'https://ddsl.ie/league/208714/',
+    updated: '23 May 2026',
+    teams: [
+      { pos:1,  team:'Sheriff YC',             pld:21, w:20, d:0, l:1,  pts:60, form:'WWWWW' },
+      { pos:2,  team:'Collinstown FC',         pld:18, w:17, d:0, l:1,  pts:51, form:'WWWWW' },
+      { pos:3,  team:'Greenhills Boys FC',     pld:21, w:15, d:3, l:3,  pts:48, form:'WWDWW' },
+      { pos:4,  team:'Glebe North FC',         pld:18, w:13, d:1, l:4,  pts:40, form:'WWWWL' },
+      { pos:5,  team:'Greystones United AFC',  pld:23, w:13, d:0, l:10, pts:39, form:'LWLLW' },
+      { pos:6,  team:'Templeogue United FC',   pld:23, w:10, d:3, l:10, pts:33, form:'WLLWL' },
+      { pos:7,  team:'Kilnamanagh AFC',        pld:20, w:8,  d:1, l:11, pts:25, form:'LLLLL' },
+      { pos:8,  team:'Oliver Bond Celtic FC',  pld:18, w:7,  d:3, l:8,  pts:24, form:'WWWLW' },
+      { pos:9,  team:'Beechwood FC',           pld:21, w:5,  d:4, l:12, pts:19, form:'LWDWL' },
+      { pos:10, team:'Belmont FC',             pld:19, w:5,  d:3, l:11, pts:18, form:'LWWLL' },
+      { pos:11, team:'Dalkey United FC',       pld:18, w:4,  d:3, l:11, pts:15, form:'WLDLW' },
+      { pos:12, team:'Rosemount Mulvey FC',    pld:19, w:4,  d:1, l:14, pts:13, form:'WLWLL' },
+      { pos:13, team:'Finglas United FC',      pld:18, w:3,  d:3, l:12, pts:12, form:'LWWWL' },
+      { pos:14, team:'Verona FC',              pld:17, w:3,  d:1, l:13, pts:10, form:'LWWWL' },
+      { pos:15, team:'River Valley Rangers FC',pld:16, w:2,  d:1, l:13, pts:7,  form:'WWLLL' },
+    ]
+  },
+  {
+    id: 'u12_6',
+    name: 'U12.6 Boys Sat',
+    url: 'https://ddsl.ie/league/208712/',
+    updated: '23 May 2026',
+    teams: [
+      { pos:1,  team:'Mulhuddart FC',            pld:18, w:17, d:1, l:0,  pts:52, form:'DWWWW' },
+      { pos:2,  team:'Wolfe Tone & District YC', pld:17, w:13, d:2, l:2,  pts:41, form:'WWDWD' },
+      { pos:3,  team:'Beechwood FC',             pld:24, w:12, d:5, l:7,  pts:41, form:'WWDLW' },
+      { pos:4,  team:'Montpelier FC',            pld:19, w:11, d:2, l:6,  pts:35, form:'WWWWW' },
+      { pos:5,  team:'Sporting Greystones FC',   pld:18, w:10, d:3, l:5,  pts:33, form:'WLWWW' },
+      { pos:6,  team:'Rosemount Mulvey FC',      pld:20, w:9,  d:1, l:10, pts:28, form:'WLLWL' },
+      { pos:7,  team:'Wayside Celtic FC',        pld:22, w:8,  d:3, l:11, pts:27, form:'WWDWL' },
+      { pos:8,  team:'Belmont FC',               pld:24, w:7,  d:6, l:11, pts:27, form:'DWDWW' },
+      { pos:9,  team:'Terenure Rangers FC',      pld:21, w:7,  d:2, l:12, pts:23, form:'WLLWL' },
+      { pos:10, team:'Ballyowen Celtic FC',      pld:18, w:5,  d:3, l:10, pts:18, form:'WLWLL' },
+      { pos:11, team:'Manortown United FC',      pld:20, w:4,  d:2, l:14, pts:14, form:'LLLWW' },
+      { pos:12, team:'Park Celtic FC',           pld:16, w:3,  d:0, l:13, pts:9,  form:'LWLLL' },
+      { pos:13, team:'East Wall Bessborough FC', pld:17, w:1,  d:0, l:16, pts:3,  form:'LLLLL' },
+    ]
+  },
+  {
+    id: 'u12_3',
+    name: 'U12.3 Boys Sat',
+    url: 'https://ddsl.ie/league/208698/',
+    updated: '23 May 2026',
+    teams: [
+      { pos:1,  team:'Manortown United FC',    pld:19, w:15, d:1, l:3,  pts:46, form:'WWWWD' },
+      { pos:2,  team:'Templeogue United FC',   pld:19, w:14, d:4, l:1,  pts:46, form:'WWDWW' },
+      { pos:3,  team:'Corduff FC',             pld:20, w:13, d:3, l:4,  pts:42, form:'WWLWW' },
+      { pos:4,  team:'Belmont FC',             pld:19, w:11, d:4, l:4,  pts:37, form:'WLWDW' },
+      { pos:5,  team:'Sporting Greystones FC', pld:19, w:9,  d:4, l:6,  pts:31, form:'LWLLL' },
+      { pos:6,  team:'Granada FC',             pld:18, w:9,  d:3, l:6,  pts:30, form:'WLWLD' },
+      { pos:7,  team:'Dynamo Dublin FC',       pld:19, w:7,  d:3, l:9,  pts:24, form:'LLDDW' },
+      { pos:8,  team:'Leixlip United AFC',     pld:17, w:5,  d:2, l:10, pts:17, form:'LLWWL' },
+      { pos:9,  team:'Greystones United AFC',  pld:18, w:3,  d:1, l:14, pts:10, form:'LLLLW' },
+      { pos:10, team:'Home Farm FC',           pld:17, w:0,  d:1, l:16, pts:1,  form:'LLLLL' },
+      { pos:11, team:'Terenure Rangers FC',    pld:18, w:1,  d:1, l:16, pts:4,  form:'LLLLL' },
+    ]
+  },
 ];
 
-const selected = new Set();
-let loadedData = {};   // id -> array of row objects
+// ── State ──────────────────────────────────────────────────────────────────────
+let selected = new Set();
+let loaded = new Set();
 
-// ── Build division chips ──────────────────────────────────────────────────────
-(function buildChips() {
-  const grid = document.getElementById('division-grid');
-  DIVISIONS.forEach(d => {
-    const chip = document.createElement('div');
-    chip.className = 'division-chip';
-    chip.id = 'chip-' + d.id;
-    chip.innerHTML = `
-      <div class="chip-check" id="check-${d.id}">✓</div>
+// ── Init ───────────────────────────────────────────────────────────────────────
+function init() {
+  const grid = document.getElementById('divisionGrid');
+  LEAGUES.forEach(lg => {
+    const label = document.createElement('label');
+    label.className = 'div-toggle';
+    label.dataset.id = lg.id;
+    label.innerHTML = `
+      <input type="checkbox" value="${lg.id}" onchange="toggleDivision('${lg.id}', this)">
       <div>
-        <div class="chip-label">${d.label}</div>
-        <div class="chip-sub">ddsl.ie/league/${d.leagueId}/</div>
-      </div>`;
-    chip.addEventListener('click', () => toggleChip(d.id));
-    grid.appendChild(chip);
-  });
-})();
-
-function toggleChip(id) {
-  if (selected.has(id)) selected.delete(id);
-  else selected.add(id);
-  document.getElementById('chip-' + id).classList.toggle('selected', selected.has(id));
-  document.getElementById('btn-load').disabled = selected.size === 0;
-}
-
-function toggleAll() {
-  const allSelected = DIVISIONS.every(d => selected.has(d.id));
-  DIVISIONS.forEach(d => {
-    if (allSelected) selected.delete(d.id);
-    else selected.add(d.id);
-    document.getElementById('chip-' + d.id).classList.toggle('selected', selected.has(d.id));
-  });
-  document.getElementById('btn-load').disabled = selected.size === 0;
-}
-
-// ── Load & parse via Anthropic API ───────────────────────────────────────────
-async function loadSelected() {
-  if (selected.size === 0) return;
-
-  const section = document.getElementById('tables-section');
-  section.innerHTML = '';
-  loadedData = {};
-
-  const toLoad = DIVISIONS.filter(d => selected.has(d.id));
-
-  // Show skeletons
-  toLoad.forEach(d => {
-    section.innerHTML += `
-      <div class="skeleton-card" id="skel-${d.id}">
-        <div class="skeleton-header">
-          <div class="skel skel-title"></div>
-          <div class="skel skel-badge"></div>
-        </div>
-        <div class="skeleton-body">
-          ${Array(6).fill('<div class="skel skel-row"></div>').join('')}
-        </div>
-      </div>`;
-  });
-
-  setStatus('Fetching ' + toLoad.length + ' table(s)…', true);
-  document.getElementById('btn-export').disabled = true;
-
-  // Fetch all in parallel
-  await Promise.all(toLoad.map(d => fetchLeagueTable(d)));
-
-  setStatus('');
-  const now = new Date().toLocaleTimeString();
-  document.getElementById('last-fetch').textContent = 'Updated ' + now;
-  if (Object.keys(loadedData).length > 0) {
-    document.getElementById('btn-export').disabled = false;
-  }
-}
-
-async function fetchLeagueTable(div) {
-  const skelEl = document.getElementById('skel-' + div.id);
-  try {
-    const prompt = `Fetch the league table from this URL: ${div.url}
-
-Parse the standings table (NOT the matrix/fixture grid) and return ONLY a JSON array.
-Each element should be an object with these exact keys:
-  position (number), team (string), played (number), won (number), drawn (number), lost (number), gf (number), ga (number), gd (number), points (number), form (string - last 5 results as W/D/L letters joined by commas e.g. "W,W,D,L,W")
-
-Return ONLY the JSON array, no markdown, no explanation. Example:
-[{"position":1,"team":"FC Example","played":20,"won":15,"drawn":3,"lost":2,"gf":45,"ga":18,"gd":27,"points":48,"form":"W,W,D,W,W"}]
-
-Important: GF = goals for, GA = goals against, GD = goal difference.
-If GF/GA are not shown separately, use 0.
-If form is not shown, use empty string "".`;
-
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await response.json();
-
-    // Gather all text blocks
-    let rawText = data.content
-      .filter(b => b.type === 'text')
-      .map(b => b.text)
-      .join('\n');
-
-    // Strip markdown fences
-    rawText = rawText.replace(/```json|```/g, '').trim();
-
-    // Extract JSON array
-    const match = rawText.match(/\[[\s\S]*\]/);
-    if (!match) throw new Error('No JSON array found in response');
-
-    const rows = JSON.parse(match[0]);
-    loadedData[div.id] = { division: div, rows };
-    renderTable(div, rows, skelEl);
-
-  } catch (err) {
-    console.error(div.id, err);
-    if (skelEl) {
-      skelEl.innerHTML = `
-        <div class="table-card-header">
-          <span class="table-card-title">${div.label}</span>
-          <a href="${div.url}" target="_blank" class="table-card-link">↗ Open on DDSL</a>
-        </div>
-        <div class="error-msg">⚠ Could not load table: ${err.message}. <a href="${div.url}" target="_blank" style="color:var(--green)">Open on DDSL.ie</a></div>`;
-      skelEl.className = 'table-card';
-    }
-  }
-}
-
-function renderTable(div, rows, skelEl) {
-  const teamCount = rows.length;
-  const html = `
-    <div class="table-card-header">
-      <div>
-        <div class="table-card-title">${div.label}</div>
+        <div class="div-name">${lg.name}</div>
+        <div class="div-sub">ddsl.ie/league/${lg.url.match(/\d+/)[0]}</div>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span class="table-card-badge">${teamCount} teams</span>
-        <a href="${div.url}" target="_blank" class="table-card-link">↗ DDSL.ie</a>
-      </div>
+    `;
+    grid.appendChild(label);
+  });
+  updateCount();
+}
+
+function toggleDivision(id, cb) {
+  if (cb.checked) selected.add(id);
+  else selected.delete(id);
+  cb.closest('.div-toggle').classList.toggle('active', cb.checked);
+  updateCount();
+}
+
+function selectAll() {
+  document.querySelectorAll('.div-toggle input').forEach(cb => {
+    cb.checked = true;
+    cb.closest('.div-toggle').classList.add('active');
+    selected.add(cb.value);
+  });
+  updateCount();
+}
+
+function selectNone() {
+  document.querySelectorAll('.div-toggle input').forEach(cb => {
+    cb.checked = false;
+    cb.closest('.div-toggle').classList.remove('active');
+  });
+  selected.clear();
+  updateCount();
+}
+
+function updateCount() {
+  document.getElementById('selCount').textContent =
+    `${selected.size} division${selected.size !== 1 ? 's' : ''} selected`;
+}
+
+// ── Load / Render ──────────────────────────────────────────────────────────────
+function loadSelected() {
+  if (selected.size === 0) {
+    alert('Please select at least one division.');
+    return;
+  }
+  const area = document.getElementById('tablesArea');
+  area.innerHTML = '';
+  loaded.clear();
+
+  const order = LEAGUES.filter(lg => selected.has(lg.id));
+  order.forEach(lg => {
+    area.appendChild(renderLeagueCard(lg));
+    loaded.add(lg.id);
+  });
+
+  document.getElementById('exportBtn').disabled = loaded.size === 0;
+}
+
+function renderLeagueCard(lg) {
+  const card = document.createElement('div');
+  card.className = 'league-card';
+  card.id = 'card-' + lg.id;
+
+  card.innerHTML = `
+    <div class="league-card-header">
+      <h3>${lg.name}</h3>
+      <a href="${lg.url}" target="_blank">View on ddsl.ie ↗</a>
     </div>
-    <div class="table-scroll">
-      <table class="league">
+    <div class="table-wrap">
+      <table class="league-table">
         <thead>
           <tr>
-            <th>#</th>
+            <th class="num">#</th>
             <th>Team</th>
-            <th>Pld</th>
-            <th>W</th>
-            <th>D</th>
-            <th>L</th>
-            <th>GF</th>
-            <th>GA</th>
-            <th>GD</th>
-            <th>Pts</th>
+            <th class="num">Pld</th>
+            <th class="num">W</th>
+            <th class="num">D</th>
+            <th class="num">L</th>
+            <th class="num">Pts</th>
             <th>Form</th>
           </tr>
         </thead>
         <tbody>
-          ${rows.map((r, i) => {
-            const posClass = r.position === 1 ? 'pos-1' : r.position === 2 ? 'pos-2' : r.position === 3 ? 'pos-3' : '';
-            const gd = typeof r.gd !== 'undefined' ? r.gd : (r.gf - r.ga);
-            const gdStr = gd > 0 ? '+' + gd : gd;
-            const formHtml = buildForm(r.form);
-            return `<tr>
-              <td class="pos-cell ${posClass}">${r.position}</td>
-              <td><span class="team-name">${escHtml(r.team)}</span></td>
-              <td>${r.played}</td>
-              <td>${r.won}</td>
-              <td>${r.drawn}</td>
-              <td>${r.lost}</td>
-              <td class="gf-ga">${r.gf || 0}</td>
-              <td class="gf-ga">${r.ga || 0}</td>
-              <td class="gf-ga">${gdStr}</td>
-              <td class="pts-cell">${r.points}</td>
-              <td><div class="form-badges">${formHtml}</div></td>
-            </tr>`;
-          }).join('')}
+          ${lg.teams.map(t => renderRow(t)).join('')}
         </tbody>
       </table>
-    </div>`;
-
-  if (skelEl) {
-    skelEl.className = 'table-card';
-    skelEl.innerHTML = html;
-  }
+    </div>
+    <div class="last-updated">Last fetched: ${lg.updated}</div>
+  `;
+  return card;
 }
 
-function buildForm(formStr) {
-  if (!formStr) return '';
-  const parts = formStr.split(/[,\s]+/).filter(Boolean).slice(-5);
-  return parts.map(r => {
-    const up = r.toUpperCase();
-    const cls = up === 'W' ? 'form-w' : up === 'L' ? 'form-l' : 'form-d';
-    return `<span class="form-badge ${cls}">${up}</span>`;
-  }).join('');
+function renderRow(t) {
+  const posClass = t.pos === 1 ? 'gold' : t.pos === 2 ? 'silver' : t.pos === 3 ? 'bronze' : '';
+  const topRow = t.pos === 1 ? 'top-pos' : '';
+  const formBadges = t.form.split('').map(c =>
+    `<div class="form-badge ${c}">${c}</div>`
+  ).join('');
+
+  return `
+    <tr class="${topRow}">
+      <td class="pos ${posClass}">${t.pos}</td>
+      <td class="team-name">${t.team}</td>
+      <td class="num">${t.pld}</td>
+      <td class="num">${t.w}</td>
+      <td class="num">${t.d}</td>
+      <td class="num">${t.l}</td>
+      <td class="pts">${t.pts}</td>
+      <td><div class="form-badges">${formBadges}</div></td>
+    </tr>
+  `;
 }
 
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function setStatus(msg, spin) {
-  const el = document.getElementById('status-bar');
-  if (!msg) { el.textContent = ''; return; }
-  el.innerHTML = spin
-    ? `<span class="spin" style="display:inline-block;">⟳</span> ${msg}`
-    : msg;
-}
-
-// ── CSV Export ────────────────────────────────────────────────────────────────
+// ── CSV Export ─────────────────────────────────────────────────────────────────
 function exportCSV() {
-  if (Object.keys(loadedData).length === 0) return;
+  if (loaded.size === 0) return;
 
-  let csv = '';
-  const entries = Object.values(loadedData);
-
-  entries.forEach(({ division, rows }) => {
-    // Division header row
-    csv += `"${division.label}"\n`;
-    csv += 'Position,Team,Played,Won,Drawn,Lost,GF,GA,GD,Points,Form\n';
-    rows.forEach(r => {
-      const gd = typeof r.gd !== 'undefined' ? r.gd : (r.gf - r.ga);
-      const formClean = (r.form || '').replace(/,/g, ' ');
-      csv += [
-        r.position,
-        `"${(r.team || '').replace(/"/g, '""')}"`,
-        r.played, r.won, r.drawn, r.lost,
-        r.gf || 0, r.ga || 0, gd,
-        r.points,
-        `"${formClean}"`
-      ].join(',') + '\n';
+  const rows = [['Division','Position','Team','Played','Won','Drawn','Lost','Points','Form']];
+  LEAGUES.filter(lg => loaded.has(lg.id)).forEach(lg => {
+    lg.teams.forEach(t => {
+      rows.push([lg.name, t.pos, t.team, t.pld, t.w, t.d, t.l, t.pts, t.form]);
     });
-    csv += '\n';
+    rows.push([]); // blank separator
   });
 
+  const csv = rows.map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')).join('\r\n');
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  const date = new Date().toISOString().slice(0, 10);
-  a.download = `DDSL_Tables_${date}.csv`;
+  a.download = `DDSL_League_Tables_${new Date().toISOString().slice(0,10)}.csv`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+init();
 </script>
 </body>
 </html>
